@@ -2,6 +2,7 @@ import { Schema, model } from "mongoose";
 import TUser, { TUserMethods } from "./user.interface";
 import bycrpt from "bcrypt";
 import env from "../../config/env";
+import jwt from "jsonwebtoken";
 const userSchema = new Schema<TUser, TUserMethods>(
   {
     name: {
@@ -46,6 +47,13 @@ userSchema.static("passwordDecord", async function (basePassword) {
     const data = await bycrpt.hash(basePassword, env.SOLT);
     return data;
   }
+});
+userSchema.static("getToken", async function (userId, expireIn) {
+  if (!userId) return;
+  const token = await jwt.sign({userId}, env.TOKEN, {
+    expiresIn: expireIn,
+  });
+  return token;
 });
 
 const USER = model<TUser, TUserMethods>("user", userSchema);

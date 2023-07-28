@@ -13,6 +13,8 @@ type TUser = {
 
 export interface TUserMethods extends Model<TUser> {
   passwordDecord(basePassword: string): string;
+  getToken(userId: string, expiresIn: string): string; 
+  matchToken(token: string): string;
 }
 
 export type TUserRegistration = {

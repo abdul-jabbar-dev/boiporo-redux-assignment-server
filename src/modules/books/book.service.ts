@@ -10,6 +10,15 @@ export const getAllBooksDB = async () => {
   }
 };
 
+export const getABookDB = async (id: string) => {
+  try {
+    const data = await BOOK.findById(id);
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const createABooksDB = async (data: TBook) => {
   try {
     const result = await BOOK.create(data);

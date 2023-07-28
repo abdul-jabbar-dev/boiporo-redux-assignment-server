@@ -1,6 +1,5 @@
-import { RequestHandler } from "express";
-import BOOK from "./book.schema";
-import { createABooksDB, getAllBooksDB } from "./book.service";
+import { RequestHandler } from "express"; 
+import { createABooksDB, getAllBooksDB, getABookDB } from "./book.service";
 
 export const getAllBooks: RequestHandler = async (req, res) => {
   try {
@@ -10,6 +9,15 @@ export const getAllBooks: RequestHandler = async (req, res) => {
     res.send(error);
   }
 };
+export const getABook: RequestHandler = async (req, res) => {
+  try {
+    const result = await getABookDB(req.params.id);
+    res.json(result);
+  } catch (error) {
+    res.send(error);
+  }
+};
+
 export const createABooks: RequestHandler = async (req, res) => {
   try {
     const result = await createABooksDB(req.body);
