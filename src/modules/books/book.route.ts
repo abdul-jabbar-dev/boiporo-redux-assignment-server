@@ -4,12 +4,15 @@ import {
   getABook,
   getAllBooks,
   addwishlist,
+  removewishlist,
 } from "./book.controller";
+import authValidate from "../../middlewares/authValidate";
 
 const bookRoute = Router();
 bookRoute.get("/", getAllBooks);
 bookRoute.get("/:id", getABook);
 bookRoute.post("/", createABooks);
 
-bookRoute.post("/add_wishlist/:bookId", addwishlist);
+bookRoute.patch("/wishlist/:bookId", authValidate(), addwishlist);
+bookRoute.delete("/wishlist/:bookId", authValidate(), removewishlist);
 export default bookRoute;

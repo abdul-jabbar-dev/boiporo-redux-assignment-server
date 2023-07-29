@@ -1,5 +1,7 @@
+import mongoose, { ObjectId } from "mongoose";
 import TBook from "./book.interface";
 import BOOK from "./book.schema";
+import USER from "../user/user.schema";
 
 export const getAllBooksDB = async () => {
   try {
@@ -28,9 +30,34 @@ export const createABooksDB = async (data: TBook) => {
   }
 };
 
-export const addwishlistDB = async (userId: string, bookId: string) => {
+export const addwishlistDB = async (userId: ObjectId, bookId: ObjectId) => {
   try {
-    console.log({ userId, bookId });
+    const user = await USER.findByIdAndUpdate(userId, {
+      $addToSet: {
+        wishlist: bookId,
+      },
+    }).lean();
+
+    if (!user) {
+      throw "user is invalid";
+    }
+
+    return user;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const removewishlistDB = async (userId: ObjectId, bookId: ObjectId) => {
+  try {
+    const user = await USER.findByIdAndUpdate(userId, {
+      $pull: { wishlist: bookId },
+    }).lean();
+    if (!user) {
+      throw "user is invalid";
+    }
+
+    return user;
   } catch (error) {
     throw error;
   }
