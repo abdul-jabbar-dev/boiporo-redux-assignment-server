@@ -37,7 +37,7 @@ export const registrationDB = async (user: TUserRegistration) => {
       result[0]._id,
       { password: 0 },
       { session }
-    );
+    ).lean();
 
     if (!nuser) {
       throw "Registration failed";

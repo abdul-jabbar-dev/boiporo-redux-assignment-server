@@ -1,8 +1,9 @@
 import { Router } from "express";
 import { getAllUser, registration } from "./user.controller";
+import authValidate from "../../middlewares/authValidate";
 
 const userRoute = Router();
-userRoute.get("/", getAllUser);
+userRoute.get("/", authValidate(), getAllUser);
 userRoute.post("/", registration);
 
 /*  
