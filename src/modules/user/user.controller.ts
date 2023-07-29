@@ -20,7 +20,6 @@ export const loginUser: RequestHandler = async (req, res) => {
       const { password, email } = req.body;
       const result = await loginUserDB({ email, password });
       res.cookie("token", result.token, { httpOnly: true });
-
       res.send({
         ...result.toObject(),
         token: undefined,
