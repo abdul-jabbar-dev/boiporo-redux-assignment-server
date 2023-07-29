@@ -30,12 +30,9 @@ const userSchema = new Schema<TUser, TUserMethods>(
       type: String,
       required: true,
     },
-    accessToken: {
+    token: {
       type: String,
-    },
-    refreshToken: {
-      type: String,
-    },
+    }, 
   },
   { timestamps: true }
 );
@@ -48,9 +45,20 @@ userSchema.static("passwordDecord", async function (basePassword) {
     return data;
   }
 });
+userSchema.static(
+  "passwordMatch",
+  async function (basePassword, ancodedPassword) {
+    if (!basePassword) {
+      throw "Password required";
+    } else {
+      const data = await bycrpt.compare(basePassword, ancodedPassword);
+      return data;
+    }
+  }
+);
 userSchema.static("getToken", async function (userId, expireIn) {
   if (!userId) return;
-  const token = await jwt.sign({userId}, env.TOKEN, {
+  const token = await jwt.sign({ userId }, env.TOKEN, {
     expiresIn: expireIn,
   });
   return token;

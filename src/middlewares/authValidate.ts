@@ -3,10 +3,9 @@ import tokenValidator from "../utils/tokenValidator";
 
 const authValidate = (): RequestHandler => async (req, res, next) => {
   try {
-    const jwtTokenString = req.headers.authorization;
-    if (jwtTokenString) {
-      const Token = jwtTokenString.split(" ")[1];
-      const user = await tokenValidator(Token);
+    const jwtTokenString = req.cookies;
+    if (jwtTokenString.token) {
+      const user = await tokenValidator(jwtTokenString.token);
       req.user = user;
       next();
     } else throw "token requried";

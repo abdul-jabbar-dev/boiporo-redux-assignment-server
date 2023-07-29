@@ -1,3 +1,4 @@
+import { JwtPayload } from "jsonwebtoken";
 import { Model, ObjectId } from "mongoose";
 
 type TUser = {
@@ -6,14 +7,14 @@ type TUser = {
   password: string;
   books: ObjectId[];
   wishlist?: ObjectId[];
-  reading?: ObjectId[];
-  refreshToken: string;
-  accessToken: string;
+  reading?: ObjectId[]; 
+  token: string;
 };
 
 export interface TUserMethods extends Model<TUser> {
   passwordDecord(basePassword: string): string;
-  getToken(userId: string, expiresIn: string): string; 
+  passwordMatch(basePassword: string, ancodedPassword: string): boolean;
+  getToken(userId: JwtPayload, expiresIn: string): string;
   matchToken(token: string): string;
 }
 

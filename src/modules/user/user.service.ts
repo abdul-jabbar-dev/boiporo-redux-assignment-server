@@ -20,18 +20,14 @@ export const registrationDB = async (user: TUserRegistration) => {
     await result[0].validate();
     await result[0].save({ session });
 
-    const accessToken = await USER.getToken(
-      result[0]._id as unknown as string,
-      env.ACCESS_TOKEN_EXPIRE
+    const token = await USER.getToken(
+      result[0]._id,
+      env.TOKEN_EXPIRE
     );
-    result[0].accessToken = accessToken;
+    result[0].token = token;
 
-    const refreshToken = await USER.getToken(
-      result[0]._id as unknown as string,
-      env.REFRESH_TOKEN_EXPIRE
-    );
-    result[0].refreshToken = refreshToken;
-
+ 
+ 
     await result[0].save({ session });
     const nuser = await USER.findById(
       result[0]._id,
@@ -53,7 +49,39 @@ export const registrationDB = async (user: TUserRegistration) => {
   }
 };
 
-export const loginUserDB = async () => {};
+export const loginUserDB = async ({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}) => {
+  const session = await mongoose.startSession();
+
+  try {
+    await session.startTransaction();
+    const user = await USER.findOne({ email }, {}, { session });
+    if (!user) {
+      throw "This user is not a subscriber. try to registration!";
+    }
+    const match = await USER.passwordMatch(password, user.password);
+    if (!match) {
+      throw "Password didn't match";
+    }
+    const token = await USER.getToken(user._id, env.TOKEN_EXPIRE);
+
+
+    user.token = token; 
+    await user.save({ session });
+    await session.commitTransaction();
+    return user;
+  } catch (error) {
+    await session.abortTransaction();
+    throw error;
+  } finally {
+    await session.endSession();
+  }
+};
 
 export const getAllUserDB = async () => {
   try {

@@ -28,4 +28,12 @@ export const createABooksDB = async (data: TBook) => {
   }
 };
 
+export const addwishlistDB = async (userId: string, bookId: string) => {
+  try {
+    console.log({ userId, bookId });
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const createABookDB = () => {};
