@@ -5,6 +5,7 @@ import {
   getABookDB,
   addwishlistDB,
   removewishlistDB,
+  addReadingDB,
 } from "./book.service";
 const Types = require("mongoose").Types;
 
@@ -37,12 +38,30 @@ export const createABooks: RequestHandler = async (req, res) => {
 export const addwishlist: RequestHandler = async (req, res) => {
   try {
     const userId = req.user?._id;
-    const bookId = new Types.ObjectId(req.params.bookId);
-    if (!userId || !bookId) {
+    if (!userId || !req.params.bookId) {
       throw new Error("user cridention or book cridention is missing");
     }
-
+    const bookId = new Types.ObjectId(req.params.bookId);
+    
     const result = await addwishlistDB(userId, bookId);
+   
+    res.json(result);
+  } catch (error) {
+    res.send(error);
+  }
+};
+
+
+export const addreading: RequestHandler = async (req, res) => {
+  try {
+    const userId = req.user?._id;
+    if (!userId || !req.params.bookId) {
+      throw new Error("user cridention or book cridention is missing");
+    }
+    const bookId = new Types.ObjectId(req.params.bookId);
+    
+    const result = await addReadingDB(userId, bookId);
+   
     res.json(result);
   } catch (error) {
     res.send(error);
@@ -51,12 +70,12 @@ export const addwishlist: RequestHandler = async (req, res) => {
 
 export const removewishlist: RequestHandler = async (req, res) => {
   try {
-    const userId = req.user?._id;
-    const bookId = new Types.ObjectId(req.params.bookId);
-    if (!userId || !bookId) {
+     const userId = req.user?._id;
+    if (!userId || !req.params.bookId) {
       throw new Error("user cridention or book cridention is missing");
     }
-
+    const bookId = new Types.ObjectId(req.params.bookId);
+    
     const result = await removewishlistDB(userId, bookId);
     res.json(result);
   } catch (error) {

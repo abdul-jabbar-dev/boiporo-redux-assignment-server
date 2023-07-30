@@ -3,6 +3,7 @@ import env from "../config/env";
 import USER from "../modules/user/user.schema";
 const tokenValidator = async (token: string) => {
   try {
+   
     const tokenValid = jwt.verify(token, env.TOKEN);
     if ((tokenValid as JwtPayload).userId) {
       const user = await USER.findById(

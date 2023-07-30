@@ -37,11 +37,26 @@ export const addwishlistDB = async (userId: ObjectId, bookId: ObjectId) => {
         wishlist: bookId,
       },
     }).lean();
-
+ 
     if (!user) {
       throw "user is invalid";
     }
 
+    return user;
+  } catch (error) {
+    throw error;
+  }
+};
+export const addReadingDB = async (userId: ObjectId, bookId: ObjectId) => {
+  try {
+    const user = await USER.findByIdAndUpdate(userId, {
+      $addToSet: {
+        reading: bookId,
+      },
+    }).lean();
+    if (!user) {
+      throw "user is invalid";
+    }
     return user;
   } catch (error) {
     throw error;
