@@ -1,7 +1,7 @@
 import { JwtPayload } from "jsonwebtoken";
 import { Model, ObjectId } from "mongoose";
 
-type TUser = {
+type TUser = { 
   name: string;
   email: string;
   password: string;

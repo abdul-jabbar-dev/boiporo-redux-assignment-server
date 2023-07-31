@@ -6,13 +6,15 @@ import {
   addwishlist,
   removewishlist,
   addreading,
+  getReadInfo,
 } from "./book.controller";
 import authValidate from "../../middlewares/authValidate";
 
 const bookRoute = Router();
 bookRoute.get("/", getAllBooks);
-bookRoute.get("/:id", getABook);
 bookRoute.post("/", createABooks);
+bookRoute.get("/bookinfo", authValidate(), getReadInfo);
+bookRoute.get("/:id", getABook);
 
 bookRoute.patch("/add_reading/:bookId", authValidate(), addreading);
 bookRoute.patch("/wishlist/:bookId", authValidate(), addwishlist);

@@ -11,6 +11,14 @@ export const getAllBooksDB = async () => {
     throw error;
   }
 };
+export const getReadInfoDB = async (id: ObjectId) => {
+  try {
+    const data = await USER.findById(id).populate(["wishlist", "reading"]); 
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
 
 export const getABookDB = async (id: string) => {
   try {
@@ -37,7 +45,7 @@ export const addwishlistDB = async (userId: ObjectId, bookId: ObjectId) => {
         wishlist: bookId,
       },
     }).lean();
- 
+
     if (!user) {
       throw "user is invalid";
     }

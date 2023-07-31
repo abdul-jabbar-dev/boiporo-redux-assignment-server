@@ -4,7 +4,7 @@ type TBook = {
   title: string;
   author: string;
   genre: string;
-  publisher: ObjectId;
+  publisher?: ObjectId;
   publicationDate: string;
   reviews: string;
   imageURL: string;
