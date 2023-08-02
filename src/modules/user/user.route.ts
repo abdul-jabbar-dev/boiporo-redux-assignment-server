@@ -1,6 +1,11 @@
 import { Router } from "express";
-import { getAllUser, loginUser, registration } from "./user.controller";
-import authValidate from "../../middlewares/authValidate"; 
+import {
+  getAllUser,
+  loginUser,
+  logoutUser,
+  registration,
+} from "./user.controller";
+import authValidate from "../../middlewares/authValidate";
 
 const userRoute = Router();
 userRoute.get("/", authValidate(), async (req, res) => {
@@ -10,6 +15,7 @@ userRoute.get("/", authValidate(), async (req, res) => {
     res.send(error);
   }
 });
+userRoute.patch("/logout", authValidate(), logoutUser);
 userRoute.post("/login", loginUser);
 userRoute.post("/registration", registration);
 

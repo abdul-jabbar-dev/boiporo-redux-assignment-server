@@ -7,6 +7,7 @@ import {
   removewishlist,
   addreading,
   getReadInfo,
+  removereading,
 } from "./book.controller";
 import authValidate from "../../middlewares/authValidate";
 
@@ -16,7 +17,8 @@ bookRoute.post("/", createABooks);
 bookRoute.get("/bookinfo", authValidate(), getReadInfo);
 bookRoute.get("/:id", getABook);
 
-bookRoute.patch("/add_reading/:bookId", authValidate(), addreading);
+bookRoute.patch("/reading/:bookId", authValidate(), addreading);
+bookRoute.delete("/reading/:bookId", authValidate(), removereading);
 bookRoute.patch("/wishlist/:bookId", authValidate(), addwishlist);
 bookRoute.delete("/wishlist/:bookId", authValidate(), removewishlist);
 export default bookRoute;

@@ -1,10 +1,15 @@
 import { RequestHandler } from "express";
-import { getAllUserDB, loginUserDB, registrationDB } from "./user.service";
+import {
+  getAllUserDB,
+  loginUserDB,
+  logoutUserDB,
+  registrationDB,
+} from "./user.service";
 
 export const registration: RequestHandler = async (req, res) => {
   try {
     const result = await registrationDB(req.body);
- 
+
     res.send(result);
   } catch (error) {
     res.json(error);
@@ -17,10 +22,26 @@ export const loginUser: RequestHandler = async (req, res) => {
       res.send("email or password is missing");
     } else {
       const { password, email } = req.body;
-      const result = await loginUserDB({ email, password }); 
+      const result = await loginUserDB({ email, password });
       res.send({
-        ...result.toObject(), 
+        ...result.toObject(),
         password: undefined,
+      });
+    }
+  } catch (error) {
+    res.send(error);
+  }
+};
+export const logoutUser: RequestHandler = async (req, res) => {
+  try {
+    if (!req.user.email) {
+      res.send("email or password is missing");
+    } else {
+      const { email } = req.user;
+      const result = await logoutUserDB({ email });
+      res.send({
+        email:result.email,
+        status: "login successfully",
       });
     }
   } catch (error) {

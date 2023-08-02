@@ -13,7 +13,7 @@ export const getAllBooksDB = async () => {
 };
 export const getReadInfoDB = async (id: ObjectId) => {
   try {
-    const data = await USER.findById(id).populate(["wishlist", "reading"]); 
+    const data = await USER.findById(id).populate(["wishlist", "reading"]);
     return data;
   } catch (error) {
     throw error;
@@ -85,5 +85,17 @@ export const removewishlistDB = async (userId: ObjectId, bookId: ObjectId) => {
     throw error;
   }
 };
-
-export const createABookDB = () => {};
+export const removereadingDB = async (userId: ObjectId, bookId: ObjectId) => {
+  try {
+    const user = await USER.findByIdAndUpdate(userId, {
+      $pull: { reading: bookId },
+    }).lean();
+    if (!user) {
+      throw "user is invalid";
+    }
+    console.log(user);
+    return user;
+  } catch (error) {
+    throw error;
+  }
+};

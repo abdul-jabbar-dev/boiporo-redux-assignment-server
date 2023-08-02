@@ -20,14 +20,9 @@ export const registrationDB = async (user: TUserRegistration) => {
     await result[0].validate();
     await result[0].save({ session });
 
-    const token = await USER.getToken(
-      result[0]._id,
-      env.TOKEN_EXPIRE
-    );
+    const token = await USER.getToken(result[0]._id, env.TOKEN_EXPIRE);
     result[0].token = token;
 
- 
- 
     await result[0].save({ session });
     const nuser = await USER.findById(
       result[0]._id,
@@ -70,8 +65,7 @@ export const loginUserDB = async ({
     }
     const token = await USER.getToken(user._id, env.TOKEN_EXPIRE);
 
-
-    user.token = token; 
+    user.token = token;
     await user.save({ session });
     await session.commitTransaction();
     return user;
@@ -86,6 +80,20 @@ export const loginUserDB = async ({
 export const getAllUserDB = async () => {
   try {
     const result = await USER.find({}, { password: 0 });
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const logoutUserDB = async ({ email }: { email: string }) => {
+  try {
+    const result = await USER.findOne({ email });
+    if (!result) {
+      throw "Logout unsuccessfully";
+    }
+    result.token = "";
+    result.save();
     return result;
   } catch (error) {
     throw error;
