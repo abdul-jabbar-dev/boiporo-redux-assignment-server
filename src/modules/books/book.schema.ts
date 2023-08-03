@@ -11,6 +11,7 @@ const bookSchema = new Schema<TBook>(
       type: String,
       required: true,
     },
+    
     publisher: {
       type: Schema.ObjectId,
       ref: "user",

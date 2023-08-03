@@ -9,4 +9,11 @@ type TBook = {
   reviews: string;
   imageURL: string;
 };
+
+export type TFilter = {
+  genre?: string;
+  year?: string;
+  search?: string;
+};
+
 export default TBook;

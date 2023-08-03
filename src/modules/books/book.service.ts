@@ -1,12 +1,45 @@
 import mongoose, { ObjectId } from "mongoose";
-import TBook from "./book.interface";
+import TBook, { TFilter } from "./book.interface";
 import BOOK from "./book.schema";
 import USER from "../user/user.schema";
 
-export const getAllBooksDB = async () => {
+export const getAllBooksDB = async (filter: TFilter) => {
   try {
-    const data = await BOOK.find();
-    return data;
+    console.log(filter)
+    let findDocument = [];
+    let result;
+    if (filter.genre && !(filter.genre === 'undefined')) {
+      const regex = { $regex: new RegExp(`.*${filter?.genre}.*`, "i") };
+      findDocument.push({ genre: regex });
+    }
+    if (filter.year && !(filter.year === "undefined")) {
+      const regex = new RegExp(`^${filter.year}-`);
+      findDocument.push({ publicationDate: regex });
+    }
+    
+    if (filter?.search && !(filter.search === "undefined")) {
+      result = await BOOK.aggregate([
+        {
+          $match: {
+            $or: [
+              { title: { $regex: new RegExp(`.*${filter?.search}.*`, "i") } },
+              { author: { $regex: new RegExp(`.*${filter?.search}.*`, "i") } },
+              { genre: { $regex: new RegExp(`.*${filter?.search}.*`, "i") } },
+              {
+                publicationDate: {
+                  $regex: new RegExp(`.*${filter?.search}.*`, "i"),
+                },
+              },
+            ],
+          },
+        },
+      ]);
+    } else if (findDocument.length > 0) {
+      result = await BOOK.find({ $or: findDocument });
+    } else {
+      result = await BOOK.find();
+    }
+    return result;
   } catch (error) {
     throw error;
   }
@@ -70,7 +103,6 @@ export const addReadingDB = async (userId: ObjectId, bookId: ObjectId) => {
     throw error;
   }
 };
-
 export const removewishlistDB = async (userId: ObjectId, bookId: ObjectId) => {
   try {
     const user = await USER.findByIdAndUpdate(userId, {
@@ -78,6 +110,23 @@ export const removewishlistDB = async (userId: ObjectId, bookId: ObjectId) => {
     }).lean();
     if (!user) {
       throw "user is invalid";
+    }
+
+    return user;
+  } catch (error) {
+    throw error;
+  }
+};
+export const deleteABookDB = async (userId: ObjectId, bookId: ObjectId) => {
+  try {
+    console.log({ _id: bookId, author: userId });
+    const user = await BOOK.findOneAndDelete({
+      _id: bookId,
+      publisher: userId,
+    });
+    console.log(user);
+    if (!user) {
+      throw "book not found for delete";
     }
 
     return user;
