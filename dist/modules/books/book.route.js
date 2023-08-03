@@ -1,0 +1,20 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const book_controller_1 = require("./book.controller");
+const authValidate_1 = __importDefault(require("../../middlewares/authValidate"));
+const bookRoute = (0, express_1.Router)();
+bookRoute.get("/", book_controller_1.getAllBooks);
+bookRoute.get("/getgenre", book_controller_1.getAllBooksGenre);
+bookRoute.post("/", (0, authValidate_1.default)(), book_controller_1.createABooks);
+bookRoute.get("/bookinfo", (0, authValidate_1.default)(), book_controller_1.getReadInfo);
+bookRoute.get("/:id", book_controller_1.getABook);
+bookRoute.delete("/:id", (0, authValidate_1.default)(), book_controller_1.deleteABook);
+bookRoute.patch("/reading/:bookId", (0, authValidate_1.default)(), book_controller_1.addreading);
+bookRoute.delete("/reading/:bookId", (0, authValidate_1.default)(), book_controller_1.removereading);
+bookRoute.patch("/wishlist/:bookId", (0, authValidate_1.default)(), book_controller_1.addwishlist);
+bookRoute.delete("/wishlist/:bookId", (0, authValidate_1.default)(), book_controller_1.removewishlist);
+exports.default = bookRoute;
