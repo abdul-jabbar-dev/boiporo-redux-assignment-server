@@ -7,7 +7,7 @@ import cookieParser from "cookie-parser";
 const app: Application = express();
 app.use(cookieParser());
 const corsOptions = {
-  origin: "*",
+  origin: "https://polite-flan-eaa5c5.netlify.app",
   credentials: true,
 };
 
